@@ -134,7 +134,7 @@ violation_type_categories = ["Citation", "Warning", "ESERO"]
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
   </head>
-    ```
+  ```
 
 # Data Manipulation
 
@@ -171,6 +171,7 @@ def traffic_violation_statistic_metadata_month_linechart():
         trace_data.append(trace)
     return jsonify(trace_data)
 ```
+![png](/static/images/homepage.png)
 
 ### Secondary Flask route to render the plot and data table 
 
