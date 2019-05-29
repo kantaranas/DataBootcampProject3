@@ -1,5 +1,3 @@
-// LOAD ORLANDO'S PIECHART..............
-
 document.querySelectorAll("#charts a").forEach(function (element) {
   element.addEventListener("click", function (event) {
     event.target.dataset.chartId;
@@ -8,7 +6,6 @@ document.querySelectorAll("#charts a").forEach(function (element) {
 
 defaultURL = "/metadata/piechart";
 d3.json(defaultURL).then(function (data) {
-  console.log(data);
 
   function piechart(data) {
 
@@ -16,12 +13,10 @@ d3.json(defaultURL).then(function (data) {
     var layout = {
       margin: {
         t: 30,
-        b: 30
+        b: 50
       }
     };
     Plotly.plot("newpiechart", data, layout, { responsive: true });
   };
   piechart(data);
 });
-
-// END OF PIECHART...............

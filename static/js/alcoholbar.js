@@ -9,14 +9,13 @@ document.querySelectorAll("#charts a").forEach(function (element) {
 // Plot the default route once the page loads
 var defaultURL = "/alcohol";
 d3.json(defaultURL).then(function (data) {
-    console.log(data);
 
     function alcoholbar(data) {
         var data = [data];
         var layout = {
             margin: {
                 t: 40,
-                b: 40
+                b: 50
             }
         };
         Plotly.plot("bar", data, layout, { responsive: true });

@@ -1,7 +1,5 @@
 // Start of Barchart Function -----------------------------
 
-// var bardata = d3.select("#bar");
-// bardata.html("");
 
 document.querySelectorAll("#barchart a").forEach(function (element) {
   element.addEventListener("click", function (event) {
@@ -16,7 +14,7 @@ d3.json(defaultURL).then(function (data) {
   var layout = {
     margin: {
       t: 30,
-      b: 30
+      b: 50
     }
   };
   Plotly.newPlot("bar", data, layout, { responsive: true });

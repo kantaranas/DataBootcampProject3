@@ -5,16 +5,15 @@ document.querySelectorAll("#charts a").forEach(function (element) {
 });
 
 
-barchartURL = "/metadata/barchart/12";
+barchartURL = "/metadata/barchart/07";
 d3.json(barchartURL).then(function (bardata) {
-  console.log(bardata);
 
   function barchart(bardata) {
     var bardata = [bardata];
     var layout = {
       margin: {
         t: 30,
-        b: 30
+        b: 100
       }
     };
     Plotly.plot("bar", bardata, layout, { responsive: true });
