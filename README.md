@@ -218,7 +218,7 @@ d3.json(defaultURL).then(function (data) {
 
 ![png](/static/images/piechart.png)
 
-![png](/static/images/property.png
+![png](/static/images/property.png)
 
 ### Ajax library used in JS to generate map with markers 
 
@@ -251,9 +251,9 @@ $.ajax({
     }
 });
 ```
-![png](/static/images/markers.png
+![png](/static/images/markers.png)
 
-![png](/static/images/alcohol.png
+![png](/static/images/alcohol.png)
 
 # Setbacks and Potential Improvements
 
@@ -264,7 +264,3 @@ $.ajax({
     * More categories that can be explored (vehicle type, vehicle year, vehicle maker)
     * More graphs
 
-
-```python
-
-```
