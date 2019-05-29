@@ -37,7 +37,7 @@
             </h6>
               </li>
               <li class="nav-item">
-                <a data-chart-id="/metadata/piechart" class="nav-link" href="{{url_for('index')}}">
+                <a data-chart-id="/metadata/piechart" class="nav-link" href="{{url_for('pie_chart')}}">
                   Yearly Stats - Pie
                 </a>
               </li>
@@ -57,8 +57,53 @@
                 </a>
               </li>
             </ul>
-          
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Data Filters by Month</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+            <ul class="nav flex-column mb-2">
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
+              <span>Violations 2016</span>
+              <a class="d-flex align-items-center active" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+              <li class="nav-item">
+                <a class="nav-link active" href="#">
+                  <select id="selDataset" onchange="getData(this.value)">
+		              <option value="metadata/barchart/01">January-2016</option>
+		              <option value="metadata/barchart/02">February-2016 </option>
+		              <option value="metadata/barchart/03">March-2016 </option>
+		              <option value="metadata/barchart/04">April-2016 </option>
+		              <option value="metadata/barchart/05">May-2016 </option>
+		              <option value="metadata/barchart/06">June-2016 </option>
+		              <option value="metadata/barchart/07">July-2016 </option>
+		              <option value="metadata/barchart/08">August-2016 </option>
+		              <option value="metadata/barchart/09">September-2016 </option>
+		              <option value="metadata/barchart/10">October-2016 </option>
+		              <option value="metadata/barchart/11">November-2016 </option>
+		              <option value="metadata/barchart/12">December-2016 </option>
+                  </select>
+                </a>
+              </li>
+              </ul>
+            <ul class="nav flex-column" id="charts">
+              <li class="nav-item">
+              <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Geo Mapping</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-chart-id="/leaflet" href="{{url_for('leaflet')}}">
+                  Leaflet Mapping
+                </a>
+              </li>
+            </ul>            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>Data Comparison</span>
               <a class="d-flex align-items-center text-muted" href="#">
                 <span data-feather="plus-circle"></span>
@@ -100,15 +145,18 @@
         </nav>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">2016 Traffic Violations Statistics: Alcohol vs Date of Violation </h1>
+            <h1 class="h2">Monthly Seatbelt Traffic Violations</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
             </div>
           </div>
           <div id="bar"></div>
-          <h2>Section title</h2>
+          <h2></h2>
           <div class="table-responsive">
           <div id="mytable"></div>
             <table class="table table-striped table-sm" id="excelDataTable">
+              {% for table in tables %}
+                  {{ table|safe }}
+              {% endfor %}
             </table>
           </div>
         </main>

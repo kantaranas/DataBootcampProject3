@@ -16,14 +16,11 @@
     <link href="static/css/table.css" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-
   </head>
-
 
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">ORYM's Project</a>
-      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
       <ul class="navbar-nav px-3">
       </ul>
     </nav>    
@@ -41,7 +38,7 @@
             </h6>
               </li>
               <li class="nav-item">
-                <a data-chart-id="/metadata/piechart" class="nav-link active" href="{{url_for('index')}}">
+                <a data-chart-id="/metadata/piechart" class="nav-link" href="{{url_for('pie_chart')}}">
                   Yearly Stats - Pie
                 </a>
               </li>
@@ -61,7 +58,53 @@
                 </a>
               </li>
             </ul>
-          
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Data Filters by Month</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+            <ul class="nav flex-column mb-2">
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1">
+              <span>Violations 2016</span>
+              <a class="d-flex align-items-center active" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+              <li class="nav-item">
+                <a class="nav-link active" href="#">
+                  <select id="selDataset" onchange="getData(this.value)">
+		              <option value="metadata/barchart/01">January-2016</option>
+		              <option value="metadata/barchart/02">February-2016 </option>
+		              <option value="metadata/barchart/03">March-2016 </option>
+		              <option value="metadata/barchart/04">April-2016 </option>
+		              <option value="metadata/barchart/05">May-2016 </option>
+		              <option value="metadata/barchart/06">June-2016 </option>
+		              <option value="metadata/barchart/07">July-2016 </option>
+		              <option value="metadata/barchart/08">August-2016 </option>
+		              <option value="metadata/barchart/09">September-2016 </option>
+		              <option value="metadata/barchart/10">October-2016 </option>
+		              <option value="metadata/barchart/11">November-2016 </option>
+		              <option value="metadata/barchart/12">December-2016 </option>
+                  </select>
+                </a>
+              </li>
+              </ul>
+            <ul class="nav flex-column" id="charts">
+              <li class="nav-item">
+              <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Geo Mapping</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-chart-id="/leaflet" href="{{url_for('leaflet')}}">
+                  Leaflet Mapping
+                </a>
+              </li>
+            </ul>
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
               <span>Data Comparison</span>
               <a class="d-flex align-items-center text-muted" href="#">
@@ -75,7 +118,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a data-chart-id="/property" class="nav-link active" href="{{url_for('propertychart')}}">
+                <a data-chart-id="/property" class="nav-link" href="{{url_for('propertychart')}}">
                   Property Damage Violations
                 </a>
               </li>
@@ -108,10 +151,20 @@
             <div class="btn-toolbar mb-2 mb-md-0">
             </div>
           </div>
-          <div id="newpiechart"></div>
-
-          <h2>Section title</h2>
+          <div id="bar"></div>
+          <div id="pie"></div>
+          <h1>Traffic Safety Facts</h1>
+          <hr>
           <div class="table-responsive">
+          <div>
+          <h2>Speeding Violations</h2>
+          <p>In 2016, there were 51,914 drivers involved in 34,439 fatal crashes, in which 37,461 people lost their lives. Eighteen percent of the drivers involved were speeding at the time of the crash, and 27 percent of those killed were in a crash involving at least one speeding driver. The number of speeding-related fatalities increased by 4 percent, from 9,723 in 2015 to 10,111 in 2016. However, the proportion of speedingrelated fatalities out of the total number of fatalities remained the same as in 2015 at 27 percent.
+          </p>
+          <h2>Alcohol Related Violations</h2>
+          <p>Alcohol impairment was found to be more common among speeding drivers in fatal crashes than those drivers who were not speeding. Thirty-seven percent of the speeding drivers who were involved in fatal crashes were alcohol-impaired (BAC of .08 or more), compared to 15 percent of non-speeding drivers (Table 2). Twenty-five percent of speeding drivers involved in fatal crashes had BACs of .15 or greater, while 10 percent of non-speeding drivers were in this BAC range. Drivers who were speeding when involved in fatal crashes were more likely to have been drinking—and drinking more—than those drivers who were not speeding
+          </p>
+          <footer class="blockquote-footer">Copy from NHTSA's National Center for Statistics and Analysis <cite title="Source Title">Traffic Safety Facts 2016 Data</cite></footer>
+          </div>
           <div id="mytable"></div>
             <table class="table table-striped table-sm" id="excelDataTable">
             </table>
@@ -120,7 +173,7 @@
       </div>
     </div>
     
-    <script src="{{ url_for('static', filename='js/piechart.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/montlyfilter.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script>window.jQuery || document.write('<script src="static/js/jquery-slim.min.js"><\/script>')</script>
