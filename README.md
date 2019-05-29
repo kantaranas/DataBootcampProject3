@@ -144,6 +144,8 @@ violation_type_categories = ["Citation", "Warning", "ESERO"]
 
 # Final Visualizations
 
+### Flask route quering the SQLite database and generate plot data
+
 ```python
 #### Line chart by month ####
 @app.route("/metadata/month/linechart/")
@@ -170,6 +172,8 @@ def traffic_violation_statistic_metadata_month_linechart():
     return jsonify(trace_data)
 ```
 
+### Secondary Flask route to render the plot and data table 
+
 ```python
 # This route will create an HTML to render the monthly scatter plot and HTML table
 @app.route("/scatterchart")
@@ -179,6 +183,36 @@ def scatterchart():
     return render_template("scatterchart.html", tables=[df.to_html(classes='data')])
 
 ```
+
+### Javascript to generate plotly charts 
+
+```js
+document.querySelectorAll("#charts a").forEach(function (element) {
+  element.addEventListener("click", function (event) {
+    event.target.dataset.chartId;
+  });
+});
+
+defaultURL = "/metadata/piechart";
+d3.json(defaultURL).then(function (data) {
+
+  function piechart(data) {
+
+    var data = [data];
+    var layout = {
+      margin: {
+        t: 30,
+        b: 50
+      }
+    };
+    Plotly.plot("newpiechart", data, layout, { responsive: true });
+  };
+  piechart(data);
+});
+
+```
+
+### Ajax library used in JS to generate map with markers 
 
 ```js
 $.ajax({
