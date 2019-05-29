@@ -171,7 +171,7 @@ def traffic_violation_statistic_metadata_month_linechart():
         trace_data.append(trace)
     return jsonify(trace_data)
 ```
-![png](/static/images/homepage.png)
+
 
 ### Secondary Flask route to render the plot and data table 
 
@@ -212,6 +212,13 @@ d3.json(defaultURL).then(function (data) {
 });
 
 ```
+![png](/static/images/homepage.png)
+
+![png](/static/images/linechart.png)
+
+![png](/static/images/piechart.png)
+
+![png](/static/images/property.png
 
 ### Ajax library used in JS to generate map with markers 
 
@@ -244,6 +251,9 @@ $.ajax({
     }
 });
 ```
+![png](/static/images/markers.png
+
+![png](/static/images/alcohol.png
 
 # Setbacks and Potential Improvements
 
