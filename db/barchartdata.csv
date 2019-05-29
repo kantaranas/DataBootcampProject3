@@ -1,0 +1,11 @@
+Traffic Violation,Traffic Violation Count
+accident,0
+belts,600
+personal_injury,217
+property_damage,308
+fatal,0
+commercial_license,392
+hazmat,0
+commercial_vehicle,0
+alcohol,19
+work_zone,0

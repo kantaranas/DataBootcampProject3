@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import datetime as dt
 import calendar
-import collections
 from datetime import timedelta, date
 from pandas.io.json import json_normalize
 
@@ -15,6 +14,9 @@ from sqlalchemy import create_engine, func, desc
 
 from flask import Flask, jsonify, json, render_template, url_for, redirect, url_for, escape, request
 from flask_sqlalchemy import SQLAlchemy
+
+import folium
+from cefpython3 import cefpython
 
 app = Flask(__name__)
 
@@ -64,6 +66,128 @@ def index():
     return render_template("index.html")
 
 
+#### LEAFLET ROUTES #####
+
+
+# Leaflet folium marker - personal injury data
+@app.route("/personalMarker")
+def personalMarker():
+    """Return the homepage."""
+
+    stats_db = db.session.query(Traffic_Violations_Metadata.date_of_stop, Traffic_Violations_Metadata.latitude, Traffic_Violations_Metadata.longitude, Traffic_Violations_Metadata.state, Traffic_Violations_Metadata.violation_type, Traffic_Violations_Metadata.race, Traffic_Violations_Metadata.gender).filter(Traffic_Violations_Metadata.__table__.c["personal_injury"] == 1).all()  
+    alist = []   
+    for x in stats_db:
+        adict = [
+            x[1],
+            x[2]
+        ]
+        alist.append(adict)
+
+    map_osm = folium.Map(location=[39.15807667,-77.213965], 
+                 zoom_start=10, 
+                 #tiles='./tiles/{z}/{x}/{y}.png', 
+                 attr='osm'
+      )
+    
+    for item in alist:
+        folium.Marker([item[0],item[1]], popup=str(item[0])+','+str(item[1])).add_to(map_osm)
+
+    map_osm.add_child(folium.LatLngPopup())
+    file_path = r"./templates/demo.html"
+    map_osm.save(file_path)      
+    
+    return render_template("demo.html")
+
+
+# Leaflet folium marker - property damage data
+@app.route("/propertyMarker")
+def propertyMarker():
+    """Return the homepage."""
+     
+    stats_db = db.session.query(Traffic_Violations_Metadata.date_of_stop, Traffic_Violations_Metadata.latitude, Traffic_Violations_Metadata.longitude, Traffic_Violations_Metadata.state, Traffic_Violations_Metadata.violation_type, Traffic_Violations_Metadata.race, Traffic_Violations_Metadata.gender).filter(Traffic_Violations_Metadata.__table__.c["property_damage"] == 1).all()  
+    alist = []   
+    for x in stats_db:
+        adict = [
+            x[1],
+            x[2]
+        ]
+        alist.append(adict)
+
+    map_osm = folium.Map(location=[39.15807667,-77.213965], 
+                 zoom_start=10, 
+                 attr='osm'
+      )
+    
+    for item in alist:
+        folium.Marker([item[0],item[1]], popup=str(item[0])+','+str(item[1])).add_to(map_osm)
+
+    map_osm.add_child(folium.LatLngPopup())
+    file_path = r"./templates/demo.html"
+    map_osm.save(file_path)      
+    
+    return render_template("demo.html")
+    
+
+# Leaflet folium marker - alcohol data
+@app.route("/alcoholMarker")
+def alcoholMarker():
+    """Return the homepage."""
+     
+    stats_db = db.session.query(Traffic_Violations_Metadata.date_of_stop, Traffic_Violations_Metadata.latitude, Traffic_Violations_Metadata.longitude, Traffic_Violations_Metadata.state, Traffic_Violations_Metadata.violation_type, Traffic_Violations_Metadata.race, Traffic_Violations_Metadata.gender).filter(Traffic_Violations_Metadata.__table__.c["alcohol"] == 1).all()  
+    alist = []   
+    for x in stats_db:
+        adict = [
+            x[1],
+            x[2]
+        ]
+        alist.append(adict)
+
+    map_osm = folium.Map(location=[39.15807667,-77.213965], 
+                 zoom_start=10, 
+                 attr='osm'
+      )
+    
+    for item in alist:
+        folium.Marker([item[0],item[1]], popup=str(item[0])+','+str(item[1])).add_to(map_osm)
+
+    map_osm.add_child(folium.LatLngPopup())
+    file_path = r"./templates/demo.html"
+    map_osm.save(file_path)      
+    
+    return render_template("demo.html")
+
+
+# Leaflet folium marker - alcohol data
+@app.route("/beltsMarker")
+def beltsMarker():
+    """Return the homepage."""
+     
+    stats_db = db.session.query(Traffic_Violations_Metadata.date_of_stop, Traffic_Violations_Metadata.latitude, Traffic_Violations_Metadata.longitude, Traffic_Violations_Metadata.state, Traffic_Violations_Metadata.violation_type, Traffic_Violations_Metadata.race, Traffic_Violations_Metadata.gender).filter(Traffic_Violations_Metadata.__table__.c["belts"] == 1).all()  
+    alist = []   
+    for x in stats_db:
+        adict = [
+            x[1],
+            x[2]
+        ]
+        alist.append(adict)
+
+    map_osm = folium.Map(location=[39.15807667,-77.213965], 
+                 zoom_start=10,
+                 attr='osm'
+      )
+    
+    for item in alist:
+        folium.Marker([item[0],item[1]], popup=str(item[0])+','+str(item[1])).add_to(map_osm)
+
+    map_osm.add_child(folium.LatLngPopup())
+    file_path = r"./templates/demo.html"
+    map_osm.save(file_path)      
+    
+    return render_template("demo.html")
+
+
+#### END OF LEAFLET FOLIUM MARKER -  #####
+
 #### Pie Chart for month #####
 
 @app.route("/metadata/piechart/<month>")
@@ -91,6 +215,7 @@ def traffic_violation_statistic_metadata_piechart(month):
             filter(Traffic_Violations_Metadata.date_of_stop <= endDate).\
             group_by(getattr(Traffic_Violations_Metadata, traffic_category)).all()
 
+		# Get results
         for result in results:
 
             if result[0] == 1:
@@ -125,7 +250,7 @@ def traffic_violation_statistic_metadata_month_linechart():
         df_traffic_category = df.loc[df["Traffic Violation"]
                                      == traffic_category]
 
-        # y values
+        # Y values
         traffic_violation_data = df_traffic_category["Traffic Violation Count"].values.tolist(
         )
 
@@ -152,7 +277,6 @@ def traffic_violation_statistic_metadata_month_table():
     df_html_table = df.to_html()
     df_html_table = df_html_table.replace('\n', '')
 
-    # Return results
     return df_html_table
 
 #### Line chart by week ####
@@ -174,7 +298,7 @@ def traffic_violation_statistic_metadata_week_linechart():
         df_traffic_category = df.loc[df["Traffic Violation"]
                                      == traffic_category]
 
-        # y values
+        # Y values
         traffic_violation_data = df_traffic_category["Traffic Violation Count"].values.tolist(
         )
 
@@ -243,7 +367,6 @@ def traffic_violation_statistic_metadata_table_year():
     df_html_table = df.to_html()
     df_html_table = df_html_table.replace('\n', '')
 
-    # Return results
     return df_html_table
 
 
@@ -273,6 +396,7 @@ def traffic_violation_statistic_metadata_piechart_year():
             filter(Traffic_Violations_Metadata.date_of_stop <= endDate).\
             group_by(getattr(Traffic_Violations_Metadata, traffic_category)).all()
 
+		# Get results
         for result in results:
 
             if result[0] == 1:
@@ -324,7 +448,6 @@ def traffic_violation_statistic_metadata_table(month):
                              traffic_category)).count()
 
         # Get results
-
         if results_count == 2:
             for result in results:
 
@@ -353,7 +476,6 @@ def traffic_violation_statistic_metadata_table(month):
     df_html_table = df.to_html()
     df_html_table = df_html_table.replace('\n', '')
 
-    # Return results
     return df_html_table
 
 
@@ -389,6 +511,7 @@ def traffic_violation_statistic_metadata_barchart(month):
             group_by(getattr(Traffic_Violations_Metadata,
                              traffic_category)).count()
 
+		# Get results
         if results_count == 2:
             for result in results:
                 if result[0] == 1:
@@ -439,8 +562,6 @@ def traffic_violation_table_demographic_metadata(month, traffic_violation, demog
     # Create a dictionary entry for each row of metadata information
     traffic_violation_metadata = []
 
-    # Check if can get a null value for yes
-
     # Get results
     for result in results:
 
@@ -472,13 +593,9 @@ def traffic_violation_table_demographic_metadata(month, traffic_violation, demog
     df_html_table = df.to_html()
     df_html_table = df_html_table.replace('\n', '')
 
-    # Reorder columns
-
-    # Return results
     return df_html_table
 
 #### Bar Chart ####
-
 
 @app.route("/metadata/barchart/<month>/<traffic_violation>/<demographic>")
 def traffic_violation_barchart_demographic_metadata(month, traffic_violation, demographic):
@@ -504,11 +621,8 @@ def traffic_violation_barchart_demographic_metadata(month, traffic_violation, de
 
     # Create a dictionary entry for each row of metadata information
     traffic_violation_metadata = {}
-    #traffic_violation_metadata["Date Range"] = f"{startDate} to {endDate}"
 
-    # Call demographics list
-    demographics_list = demographics(startDate, endDate)
-
+	# Get results
     for result in results:
         for demographic_type in demographics_list:
             if result[0] == demographic_type:
@@ -530,7 +644,6 @@ def traffic_violation_barchart_demographic_metadata(month, traffic_violation, de
     }
 
     return jsonify(trace)
-
 
 #### Table for month and state and demographic ####
 
@@ -561,6 +674,7 @@ def state_statistic_demographic_violation_type_metadata(month, user_state, demog
     # Create a dictionary entry for each row of metadata information
     traffic_violation_metadata = []
 
+	# Get results
     for result in results:
 
         metadictionary = {}
@@ -584,7 +698,6 @@ def state_statistic_demographic_violation_type_metadata(month, user_state, demog
     df_html_table = df.to_html()
     df_html_table = df_html_table.replace('\n', '')
 
-    # Return results
     return df_html_table
 
 
@@ -617,6 +730,7 @@ def state_barchart_demographic_violation_type_metadata(month, user_state, demogr
     # Create a dictionary entry for each row of metadata information
     traffic_violation_metadata = {}
 
+	# Get results
     for result in results:
         traffic_violation_metadata[f"{user_state}"] = {}
         for demographic_type in demographics_categories:
@@ -647,11 +761,8 @@ def state_barchart_demographic_violation_type_metadata(month, user_state, demogr
 
     return jsonify(trace)
 
-# END OF ORLANDO'S ROUTES #######################
-
 
 #################################################
-# Mery's Routes Start below
 
 
 # Returns a list containign Race and Gender of the offender
@@ -674,22 +785,10 @@ def stats(sample_id):
         }
         alist.append(adict)
 
-    # convert to json data
+    # Convert to json data
         jsonStr = json.dumps(alist)
 
-    # statelist =[]
-    # for dictionary in alist:
-    #     statelist.append(dictionary["state"])
-
-        # # Format the data for Plotly
-    # traceFatal = {
-    #      "x": statelist,
-    #      "y": stats_db[sample_id].values.tolist(),
-    #      "type": "bar"
-    # }
-    # return jsonify(traceFatal)
     return jsonify(alist)
-
 
 ###############################################
 
@@ -760,13 +859,12 @@ def alcohol_data():
 
     # Format the data for Plotly
     traceAlcohol = {
-        "x": df["arrest_type"].values.tolist(),
+        "x": df["date_of_stop"].values.tolist(),
         "y": df["alcohol"].values.tolist(),
         "type": "bar"
     }
 
     return jsonify(traceAlcohol)
-
 
 
 @app.route("/comlicense")
@@ -782,10 +880,9 @@ def comlicense_data():
     traceComlicense = {
         "labels": df["violation_type"].values.tolist(),
         "values": df["commercial_license"].values.tolist(),
-        "type": "pie" 
+        "type": "pie"
     }
     return jsonify(traceComlicense)
-
 
 
 @app.route("/belts")
@@ -810,33 +907,36 @@ def belt_data():
 # WILL DEVELOP HTML PAGES TO RENDER CHARTS
 #################################################
 
-# This HTML will render a csv table on the html
-@app.route("/indexjson")
-def indexjson():
-    return render_template("index_json.html")
 
-
-# This route will create an HTML to render one scatter plot
+# This route will create an HTML to render the monthly scatter plot and HTML table
 @app.route("/scatterchart")
 def scatterchart():
-    return render_template("scatterchart.html")
+    df = pd.read_csv('db/traffic_violation_counts_by_month.csv')
+    # Return results
+    return render_template("scatterchart.html", tables=[df.to_html(classes='data')])
 
-# This route will create an HTML to render one scatter plot
+# This route will create an HTML to render the weekly scatter plot and HTML table
 @app.route("/scatterweekly")
 def scatterweekly():
-    return render_template("scatter.html")
+    df = pd.read_csv('db/traffic_violation_counts_by_week.csv')
+    # Return results
+    return render_template("scatter.html", tables=[df.to_html(classes='data')])
 
 
-# This route will create an HTML to render the pie plot
+# This route will create an HTML to render the pie plot and HTML table
 @app.route("/pie_chart")
 def pie_chart():
-    return render_template("pie_chart.html")
+    df = pd.read_csv('db/piechartdata.csv')
+    # Return results
+    return render_template("pie_chart.html", tables=[df.to_html(classes='data')])
 
 
-# This route will create an HTML to render one of the bar charts
+# This route will create an HTML to render one of the bar charts and HTML table
 @app.route("/barmonthly")
 def barmonthly():
-    return render_template("barmonthly.html")
+    df = pd.read_csv('db/barchartdata.csv')
+    # Return results
+    return render_template("barmonthly.html", tables=[df.to_html(classes='data')])
 
 # This route will load the bar chart created using /property damage
 @app.route("/propertychart")
@@ -874,16 +974,10 @@ def seatbeltbar():
     return render_template("seatbeltbar.html")
 
 
-# # This route will create an HTML of the data used
-# @app.route("/trafficstats")
-# def trafficstats():
-#     return render_template("trafficstats.html")
-
-
-# # This route will create an HTML
-# @app.route("/tvstats")
-# def tvstats():
-#     return render_template("tvstats.html")
+# # This route will create an HTML for Leaflet
+@app.route("/leaflet")
+def leaflet():
+    return render_template("leaflet.html")
 
 
 if __name__ == "__main__":
